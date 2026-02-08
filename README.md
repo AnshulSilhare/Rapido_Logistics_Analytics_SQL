@@ -14,14 +14,18 @@ The analysis revealed **₹251.9K in revenue leakage** due to cancellation spike
 The project moved away from Excel-based analysis to a robust SQL backend. I designed an **8-Table Star Schema** to ensure data integrity and query performance.
 
 ### **Entity-Relationship Model (Star Schema)**
-* **Fact Table:** `Fact_Bookings` (30k rows, Transactional Grain)
-* **Dimension Tables:**
-    * `Dim_Customers`: Customer demographics and ratings.
-    * `Dim_Drivers`: Driver performance scores.
-    * `Dim_Locations`: Pickup/Drop zones.
-    * `Dim_Vehicles`: Fleet details.
-    * `Dim_Payment_Methods`: UPI, Cash, Credit.
-    * `Dim_Date`: Calendar hierarchy for time-intelligence.
+The data warehouse consists of **2 Fact Tables** and **6 Dimension Tables**:
+
+* **Fact Tables (Transactional):**
+    * `Fact_Bookings`: The primary transactional table (30k rows) capturing ride details, revenue, and time metrics.
+    * `Fact_Incomplete_Logs`: An audit table specifically tracking failure reasons for incomplete rides.
+* **Dimension Tables (Context):**
+    * `Dim_Customers`: Customer demographics and rating history.
+    * `Dim_Drivers`: Driver performance scores and unique IDs.
+    * `Dim_Vehicles`: Fleet details (Bike vs. Auto).
+    * `Dim_Locations`: Pickup/Drop zones and city mapping.
+    * `Dim_Payment_Methods`: Payment instrument details (UPI, Cash).
+    * `Dim_Date`: A standard date hierarchy for time-intelligence analysis.
 
 > **Technical Highlight:** Used `INSERT IGNORE` and `UPDATE JOIN` logic to handle data quality issues (e.g., missing cancellation flags) during the ETL process.
 
